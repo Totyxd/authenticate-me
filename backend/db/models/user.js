@@ -1,6 +1,6 @@
 'use strict';
 const {
-  Model, Op
+  Model, Op, Validator
 } = require('sequelize');
 const bcrypt = require("bcryptjs");
 module.exports = (sequelize, DataTypes) => {
@@ -56,7 +56,11 @@ module.exports = (sequelize, DataTypes) => {
       unique: true,
       validate: {
         len: [4, 30],
-        isEmail: false
+        isNotEmail(value) {
+          if (Validator.isEmail(value)) {
+            throw new Error("Cannot be an email.");
+          }
+        }
       }
     },
     email: {

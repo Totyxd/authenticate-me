@@ -7,6 +7,13 @@ const router = require("express").Router();
 
 
 router.post("/", async (req, res, next) => {
+    if (req.cookies.token) {
+        const err = new Error('Login failed');
+        err.status = 401;
+        err.title = 'Login failed';
+        err.errors = ['Unaccesible route. You have already logged in'];
+        next(err);
+    };
     const {credential, password} = req.body;
 
     const userTriedToLog = await User.login({credential, password});
